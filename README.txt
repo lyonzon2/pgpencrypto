@@ -1,23 +1,20 @@
-scp C:\Users\simo\archive.tar.gpg simo@192.168.1.115:/home/simo/Desktop/
-
-Script Python & Bash :
--1 importer les clés publiques
--2 générer un message txt
--3 crypter le message par une clé spécifique 
+Python & Bash script:
+-1 import public keys
+-2 generate txt message
+-3 encrypt the message by a specific key
 
 
-Script Python & Bash :
+Python & Bash script:
 
--1 importer les clés publiques
+-1 import public keys
 
--2 générer un message txt
+-2 generate txt message
 
--3 crypter le message par une clé spécifique 
+-3 encrypt the message by a specific key
 
--4 exporter le fichier crypter sous un nom spécifique 
+-4 export the encrypt file under a specific name
 
-four functions executed by a loop 
-
+four functions executed by a loop
 
 
 
