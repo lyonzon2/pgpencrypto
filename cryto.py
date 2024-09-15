@@ -1,6 +1,8 @@
 import os
 import subprocess
+import time 
 
+current_directory = os.path.dirname(os.path.abspath(__name__))
 
 def cle_import():
     folder_path = input("type the path of your public keys :")
@@ -9,71 +11,69 @@ def cle_import():
         file_path = os.path.join(folder_path, filename)
 
         if not os.path.isfile(file_path):
-            continue
+            pass
         print("Processing file:", filename)
         command = ["gpg", "--import", file_path]
         subprocess.run(command)
 
 
-def text_generate():
+def text_generate(): 
+    global file_path
+    filename = "generated.txt"
+    file_path = os.path.join(current_directory, filename)
     text = input("write your text :")
-    with open("/home/simo/Desktop/generated.txt", "w") as f:
+    with open(file_path, "w") as f:
         f.write(text)
 
-    print("the text file is generated in '/home/simo/Desktop/generated.txt'")
+    print(f"the text file is generated in '{file_path}'")
 
 
 def encryption():
-    print("first i will show the keys that we already import")
+    encrypted_file = file_path+".gpg"
+    print("showing imported keys.....")
     keys_output = subprocess.check_output(["gpg", "--list-keys"])
     keys_output = keys_output.decode("utf-8")
     print(keys_output)
-
-    recipient_key_id = input("enter the id or the gmail for the public key, example:'root@gmail.com'  :")
-
-    text_file = input("enter the path of the text file u wanna crypto, example:'plain.txt'  :")
-
-    encrypted_file = input("enter the name of the encrypted file u want to be, example:'plain.gpg'   : ")
-
-    # command = ["gpg", "--encrypt", "--recipient", recipient_key_id, "--output", encrypted_file, text_file]
-    choice = input("are u sure u wanna do this yes/no ")
+    recipient_key_id = str(input("enter the id or the gmail for the public key. example:'root@gmail.com' : "))
+    choice = input("are you sure you wanna do this yes/no :")
     if choice == "yes":
-        # Run the subprocess command that requires a yes or no response
         process = subprocess.Popen(
-            ["gpg", "--trust-model", "always", "--encrypt", "--recipient", recipient_key_id, "--output", encrypted_file,
-             text_file],
+            ["gpg", "--trust-model", "always", "--encrypt", "--recipient", recipient_key_id, "--output" , encrypted_file, file_path],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-        # send "yes" as the response
         process.communicate(input="yes/n")
         if process.returncode == 0:
             print('Command executed successfuly .')
         else:
             print('Command failed .')
-        print(f"your just encrypt {text_file} to {encrypted_file}")
+        print(f"your just encrypt {encrypted_file}")
 
     if choice == "no":
-        print("bye")
+        print("good bye...")
+        time.sleep(2)
 
+if __name__ == "__main__":
+    try:
+        choice = str(input("Do you want to import public keys (yes/no): ").strip().lower())
+        
+        if choice == 'yes':
+            cle_import()  # Call your cle_import function
+            
+        elif choice == 'no':
+            print("\nOkay, it's your choice.")
+        else:
+            print("\nInvalid input. Please enter 'yes' or 'no'.")
+    
+    except ValueError as e:
+        print(f"An error occurred: {e}")
 
-while True:
-    choice = input("do you want to import public keys Yes/no: ")
-
-    if choice == 'yes':
-        cle_import()
-        break
-    elif choice == 'no':
-        print("\nokay it's your choice bye ")
-        break
-
-while True:
-    choice = input("do you want de generate a text file  with encryption Yes/no: ")
-    if choice == '':
-        continue
-    break
-
-if choice == 'yes':
-    text_generate()
-    encryption()
-
-elif choice == 'no':
-    print("\nokay it's your choice bye ")
+    try:
+        choice = str(input("do you want de generate a text file  with encryption (yes/no): ").strip().lower())
+        if choice == 'yes':
+            text_generate()
+            encryption()
+        elif choice == 'no':
+            print("\nokay it's your choice bye ")
+        else:
+            print("\nInvalid input. Please enter 'yes' or 'no'.")    
+    except ValueError as e :
+        print(f"An error occurred: {e}")
